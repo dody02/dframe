@@ -4,7 +4,7 @@
 
   <groupId>net.sf.dframe.cluster</groupId>
   <artifactId>net.sf.dframe.cluster</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>net.sf.dframe.cluster</name>
@@ -60,6 +60,14 @@
                 <version>${logback.version}</version>
             </dependency>
             <!-- logback end  -->
+            
+            <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <version>1.4.200</version>
+</dependency>
+            
 	
     <dependency>
       <groupId>junit</groupId>
@@ -71,6 +79,30 @@
   
   <build>
         <plugins>
+        <plugin>  
+	<artifactId>maven-assembly-plugin</artifactId>  
+	<configuration>  
+		<descriptorRefs>  
+			<descriptorRef>jar-with-dependencies</descriptorRef>  
+		</descriptorRefs>  
+		<archive>  
+			<manifest>  
+				<mainClass></mainClass>  
+			</manifest>  
+		</archive>  
+	</configuration>  
+	<executions>  
+		<execution>  
+			<id>make-assembly</id>  
+			<phase>package</phase>  
+			<goals>  
+				<goal>single</goal>  
+			</goals>  
+		</execution>  
+	</executions>  
+</plugin>  
+
+        <!--  
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -80,6 +112,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+            -->
         </plugins>
     </build>
     

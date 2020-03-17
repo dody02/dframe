@@ -6,7 +6,7 @@ import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.map.IMap;
 
-import net.df.dframe.cluster.hazelcast.HazelcastConfig;
+import net.sf.dframe.cluster.hazelcast.HazelcastConfig;
 
 public class TestConfig {
 	public static void main(String[] args) {
