@@ -57,6 +57,9 @@ public class HazelcastMasterSlaveCluster extends HazelcastShardingCluster {
 			IMap<String, String> map = hz.getMap(HazelcastMasterSlaveCluster.ACTIVE_MEMBER);
 			if (!map.isEmpty()) { 
 				active = map.get(HazelcastMasterSlaveCluster.ACTIVE_MEMBER);
+			}else { //must be first one
+				active = hz.getCluster().getLocalMember().getAddress().getHost();
+				map.put(HazelcastMasterSlaveCluster.ACTIVE_MEMBER, active);
 			}
 		} catch (Exception e) {
 			log.error("Exception when get current active member",e);
