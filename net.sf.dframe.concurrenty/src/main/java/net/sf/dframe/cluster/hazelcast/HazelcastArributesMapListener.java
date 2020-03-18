@@ -71,7 +71,7 @@ public class HazelcastArributesMapListener extends EntryAdapter<String, String> 
 	public void entryUpdated(EntryEvent<String, String> event) {
 		log.info("entryUpdated {" + event.getKey() +":"+event.getValue()+"}");
 		try {
-			db.executeSql("MERGE INTO " + ArributestMapH2Store.TableName + " KEY (" + ArributestMapH2Store.KEY_LABEL + ") VALUES (" + event.getKey() + ",'"
+			db.executeSql("MERGE INTO " + ArributestMapH2Store.TableName + " KEY (" + ArributestMapH2Store.KEY_LABEL + ") VALUES ('" + event.getKey() + "','"
 					+ event.getValue() + "');");
 		} catch (Exception e) {
 			log.error("save h2 exception", e);
