@@ -18,6 +18,7 @@ import com.hazelcast.map.IMap;
 import com.hazelcast.map.MapStore;
 import com.hazelcast.map.listener.MapListener;
 
+import net.sf.dframe.cluster.hazelcast.h2.ArributesMapH2Store;
 import net.sf.dframe.cluster.hazelcast.h2.DataBase;
 import net.sf.dframe.cluster.hazelcast.h2.H2MapStore;
 import net.sf.dframe.cluster.hazelcast.h2.H2QueueStore;
@@ -34,6 +35,7 @@ public class HazelcastMasterSlaveCluster extends HazelcastShardingCluster {
 	public static final  String ACTIVE_MEMBER = "ACTIVE";
 	
 	private static final  String ARRIBUTIES  = "ARRIBUTIES";
+	private static final  String ARRIBUTIES_PERSISTENCE  = "ARRIBUTIES_PERSISTENCE";
 	
 	private DataBase db = null;
 	
@@ -102,17 +104,59 @@ public class HazelcastMasterSlaveCluster extends HazelcastShardingCluster {
 		return hz.getMap(name);
 	}
 	
+//	/**
+//	 *  get map
+//	 * @param name
+//	 * @return
+//	 */
+//	public IMap<String,String> getPersistenceArributesMap(){
+//		MapStoreConfig mapStoreConfig = new MapStoreConfig();
+//		mapStoreConfig.setEnabled(true);
+//		mapStoreConfig.setWriteDelaySeconds(0);
+//		MapStore<String, String>  store = new ArributesMapH2Store(db);
+//		mapStoreConfig.setImplementation(store);
+//		hz.getConfig().getMapConfig(ARRIBUTIES_PERSISTENCE).setMapStoreConfig(mapStoreConfig);
+//		
+//		IMap<String,String> map = hz.getMap(ARRIBUTIES_PERSISTENCE);
+//		MapListener listener = new HazelcastArributesMapListener(db);
+//		map.addEntryListener(listener, true);
+//		return map;
+//	}
+	
+	
+	public void clearArributesMap() {
+		log.info("clear table "+ArributesMapH2Store.TableName);
+		try {
+			db.dropTable(ArributesMapH2Store.TableName);
+		} catch (Exception e) {
+			log.error("drop table exception "+ArributesMapH2Store.TableName);
+		}
+	}
+	
+	
 	/**
 	 *  get map
 	 * @param name
 	 * @return
 	 */
 	public IMap<String,String> getArributesMap(){
-		IMap<String,String> map = hz.getMap(ARRIBUTIES);
+//		IMap<String,String> map = hz.getMap(ARRIBUTIES);
+//		MapListener listener = new HazelcastArributesMapListener(db);
+//		map.addEntryListener(listener, true);
+//		return map;
+		MapStoreConfig mapStoreConfig = new MapStoreConfig();
+		mapStoreConfig.setEnabled(true);
+		mapStoreConfig.setWriteDelaySeconds(0);
+		MapStore<String, String>  store = new ArributesMapH2Store(db);
+		mapStoreConfig.setImplementation(store);
+		hz.getConfig().getMapConfig(ARRIBUTIES_PERSISTENCE).setMapStoreConfig(mapStoreConfig);
+		
+		IMap<String,String> map = hz.getMap(ARRIBUTIES_PERSISTENCE);
 		MapListener listener = new HazelcastArributesMapListener(db);
 		map.addEntryListener(listener, true);
 		return map;
 	}
+	
 	
 	/**
 	 * get list

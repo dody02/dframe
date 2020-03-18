@@ -12,9 +12,10 @@ public class TestCluster {
 		HazelcastMasterSlaveCluster c = (HazelcastMasterSlaveCluster) cc.getCluster("cluster.json");
 		
 		System.out.println(c.isMeActive());
+		c.clearArributesMap();
 		IMap<String, String>  aaa = c.getArributesMap();
-//		aaa.put("1", "3");
-		aaa.delete("1");
+		aaa.put("1", "3");
+//	aaa.delete("1");
 		
 		System.out.println("OVer");
 	}
