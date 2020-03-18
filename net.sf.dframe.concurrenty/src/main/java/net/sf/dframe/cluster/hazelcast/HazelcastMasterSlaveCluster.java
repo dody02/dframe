@@ -10,13 +10,13 @@ import com.hazelcast.collection.IList;
 import com.hazelcast.collection.IQueue;
 import com.hazelcast.collection.QueueStore;
 import com.hazelcast.config.Config;
-import com.hazelcast.config.MapConfig;
 import com.hazelcast.config.MapStoreConfig;
 import com.hazelcast.config.QueueConfig;
 import com.hazelcast.config.QueueStoreConfig;
 import com.hazelcast.cp.lock.FencedLock;
 import com.hazelcast.map.IMap;
 import com.hazelcast.map.MapStore;
+import com.hazelcast.map.listener.MapListener;
 
 import net.sf.dframe.cluster.hazelcast.h2.DataBase;
 import net.sf.dframe.cluster.hazelcast.h2.H2MapStore;
@@ -31,7 +31,9 @@ public class HazelcastMasterSlaveCluster extends HazelcastShardingCluster {
 
 	private static Logger log = LoggerFactory.getLogger(HazelcastMasterSlaveCluster.class);
 	
-	public final static String ACTIVE_MEMBER = "ACTIVE";
+	public static final  String ACTIVE_MEMBER = "ACTIVE";
+	
+	private static final  String ARRIBUTIES  = "ARRIBUTIES";
 	
 	private DataBase db = null;
 	
@@ -41,6 +43,7 @@ public class HazelcastMasterSlaveCluster extends HazelcastShardingCluster {
 		this.db = db;
 		MembershipListener listener = new HazelcastClusterMemberLisenter(hz);
 		hz.getCluster().addMembershipListener(listener );
+		
 	}
 	
 	
@@ -104,8 +107,11 @@ public class HazelcastMasterSlaveCluster extends HazelcastShardingCluster {
 	 * @param name
 	 * @return
 	 */
-	public IMap<?,?> getMap(String name){
-		return hz.getMap(name);
+	public IMap<String,String> getArributesMap(){
+		IMap<String,String> map = hz.getMap(ARRIBUTIES);
+		MapListener listener = new HazelcastArributesMapListener(db);
+		map.addEntryListener(listener, true);
+		return map;
 	}
 	
 	/**

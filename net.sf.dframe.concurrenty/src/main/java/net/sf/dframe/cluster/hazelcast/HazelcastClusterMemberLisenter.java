@@ -31,7 +31,7 @@ public class HazelcastClusterMemberLisenter implements MembershipListener{
 	@Override
 	public void memberAdded(MembershipEvent membershipEvent) {
 		
-		log.debug("MembershipEvent Event!"+JSONObject.toJSONString(membershipEvent));
+		log.info("memberAdded : " + membershipEvent.getMember().getAddress().getHost());
 		FencedLock  lock = hz.getCPSubsystem().getLock(HazelcastMasterSlaveCluster.ACTIVE_MEMBER);
 		try{
 			log.debug("try to get lock……………………");
@@ -41,7 +41,8 @@ public class HazelcastClusterMemberLisenter implements MembershipListener{
 			if (map.isEmpty()) { //当前没有活动主节点
 				log.info("current Cluster is no active member, active current member ");
 				map.put(HazelcastMasterSlaveCluster.ACTIVE_MEMBER, hz.getCluster().getLocalMember().getAddress().getHost()); //让当前节点作为主服务
-			} 
+			}
+			
 		} catch (Exception e) {
 			log.error("Exception when set current active member",e);
 		} finally {
@@ -54,6 +55,7 @@ public class HazelcastClusterMemberLisenter implements MembershipListener{
 
 	@Override
 	public void memberRemoved(MembershipEvent membershipEvent) {
+		log.info("memberRemoved : " + membershipEvent.getMember().getAddress().getHost());
 		try{
 			hz.getCPSubsystem().getLock(HazelcastMasterSlaveCluster.ACTIVE_MEMBER).tryLock(5, TimeUnit.SECONDS); //等待5秒获得锁
 			IMap<String, String> map = hz.getMap(HazelcastMasterSlaveCluster.ACTIVE_MEMBER);
