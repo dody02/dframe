@@ -50,7 +50,7 @@ public class HazelcastArributesMapListener extends EntryAdapter<String, String> 
 	public void entryAdded(EntryEvent<String, String> event) {
 		log.info("entryAdded {" + event.getKey() +":"+event.getValue()+"}");
 		try {
-			db.executeSql("MERGE INTO " + ArributestMapH2Store.TableName + " KEY (" + ArributestMapH2Store.KEY_LABEL + ") VALUES (" + event.getKey() + ",'"
+			db.executeSql("MERGE INTO " + ArributestMapH2Store.TableName + " KEY (" + ArributestMapH2Store.KEY_LABEL + ") VALUES ('" + event.getKey() + "','"
 					+ event.getValue() + "');");
 		} catch (Exception e) {
 			log.error("save h2 exception", e);
@@ -61,7 +61,7 @@ public class HazelcastArributesMapListener extends EntryAdapter<String, String> 
 	public void entryRemoved(EntryEvent<String, String> event) {
 		log.info("entryRemoved {" + event.getKey() +":"+event.getValue()+"}");
 		try {
-			db.executeSql("DELETE FROM "+ArributestMapH2Store.TableName+" WHERE "+ArributestMapH2Store.KEY_LABEL+" = "+event.getKey()+";");
+			db.executeSql("DELETE FROM "+ArributestMapH2Store.TableName+" WHERE "+ArributestMapH2Store.KEY_LABEL+" = '"+event.getKey()+"';");
 		} catch (Exception e) {
 			log.error("delete h2 exception",e);
 		}

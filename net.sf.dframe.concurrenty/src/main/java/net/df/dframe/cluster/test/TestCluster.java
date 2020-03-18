@@ -13,7 +13,9 @@ public class TestCluster {
 		
 		System.out.println(c.isMeActive());
 		IMap<String, String>  aaa = c.getArributesMap();
-		aaa.put("1", "2");
+//		aaa.put("1", "3");
+		aaa.delete("1");
+		
 		System.out.println("OVer");
 	}
 }
